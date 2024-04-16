@@ -18,6 +18,7 @@ class _HistoryPageState extends State<HistoryPage> {
           name: "Emmanuel Rockson Kwabena Uncle Ebo",
           contact: "024 123 4567",
           favorite: true,
+          status: TransactionStatus.success,
           amount: "500"),
       Transaction(
           time: "14:45Pm",
