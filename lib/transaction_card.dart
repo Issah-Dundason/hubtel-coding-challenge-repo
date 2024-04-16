@@ -2,13 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:hubtel_coding/models.dart';
 
 // This widget represents a transaction card
-class TransactionCard extends StatelessWidget {
+class TransactionCard extends StatefulWidget {
   const TransactionCard({super.key, required this.transaction});
 
   final Transaction transaction;
 
   @override
+  State<TransactionCard> createState() => _TransactionCardState();
+}
+
+class _TransactionCardState extends State<TransactionCard> {
+  double mininAmountHeight = 0;
+
+  final myKey = GlobalKey();
+
+  bool hasCalculated = false;
+
+  @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () => doCalculation());
+
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -18,9 +31,10 @@ class TransactionCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(transaction.time),
+          Text(widget.transaction.time),
           const SizedBox(height: 10),
           Row(
+            key: myKey,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
@@ -34,24 +48,29 @@ class TransactionCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(width: 120, child: Text(transaction.name)),
+                          SizedBox(
+                              width: 120, child: Text(widget.transaction.name)),
                           const SizedBox(height: 4),
-                          Text(transaction.contact)
+                          Text(widget.transaction.contact)
                         ],
                       ),
                     )
                   ],
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(transaction.status == TransactionStatus.success
-                      ? "Successful"
-                      : "failed"),
-                  const SizedBox(height: 10),
-                  Text("${transaction.currency} ${transaction.amount}")
-                ],
+              Container(
+                constraints: BoxConstraints(minHeight: mininAmountHeight),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(widget.transaction.status == TransactionStatus.success
+                        ? "Successful"
+                        : "failed"),
+                    const SizedBox(height: 10),
+                    Text(
+                        "${widget.transaction.currency} ${widget.transaction.amount}")
+                  ],
+                ),
               )
             ],
           ),
@@ -72,10 +91,10 @@ class TransactionCard extends StatelessWidget {
                     radius: 4,
                   ),
                   const SizedBox(width: 10),
-                  Text('${transaction.message}'),
+                  Text('${widget.transaction.message}'),
                 ],
               ),
-              if (transaction.favorite)
+              if (widget.transaction.favorite)
                 Icon(
                   Icons.star,
                   color: Colors.yellow,
@@ -85,5 +104,16 @@ class TransactionCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void doCalculation() {
+    if (hasCalculated) return;
+
+    final height = myKey.currentContext?.size?.height;
+
+    setState(() {
+      hasCalculated = true;
+      mininAmountHeight = height ?? 0;
+    });
   }
 }
