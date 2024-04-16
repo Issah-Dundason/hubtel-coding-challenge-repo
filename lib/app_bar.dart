@@ -8,7 +8,7 @@ class HistoryAppBar extends StatefulWidget implements PreferredSizeWidget {
   State<HistoryAppBar> createState() => _HistoryAppBarState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(152);
+  Size get preferredSize => const Size.fromHeight(172);
 }
 
 class _HistoryAppBarState extends State<HistoryAppBar> {
@@ -50,7 +50,8 @@ class _HistoryAppBarState extends State<HistoryAppBar> {
               Icon(Icons.menu)
             ],
           ),
-        )
+        ),
+        const SizedBox(height: 20),
       ],
     ));
   }
